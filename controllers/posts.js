@@ -2,19 +2,7 @@ const FoodDonation = require("../models/donate");
 const bcrypt = require('bcrypt');
 const User = require("../models/User");
 
-const user = {
-  fullName: "Het Patel",
-  email: "hetpatel@example.com",
-  phone: "9876543210",
-  dob: "2002-08-15", // format: YYYY-MM-DD
-  address: {
-    houseNo: "B-21",
-    street: "Galaxy Road",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    pincode: "382475",
-  },
-};
+
 
 async function addDonation(req, res) {
   try {
@@ -79,8 +67,11 @@ async function getDashboard(req, res) {
     const donations = await FoodDonation.find({
       email: req.user.id.email,
     }).sort({ createdAt: -1 }); // latest first
-
-    res.render("data", { donation: donations, user: req.user, User: user });
+    const address = await User.find({
+      email: req.user.id.email,
+      
+    },{address:1 ,_id:0});
+    res.render("data", { donation: donations, user: req.user, User: address[0] });
   } catch (err) {
     console.error("Error fetching dashboard data:", err);
     res.status(500).send("Something went wrong");
@@ -112,10 +103,6 @@ async function RenderDonationForm(req, res) {
     const address = await User.find({
       email: req.user.id.email,
     }).sort({ createdAt: -1 });
-
-    console.log(address[0].address)
-
-
     res.render("formdonation", {
       user: req.user,
       address:address[0].address,

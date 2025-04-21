@@ -8,7 +8,7 @@
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
    <title>Annapurna</title>
 </head>
 
@@ -365,9 +365,11 @@
             </div>
          </div>
       </div>
-      <div id="Alldonations" class="hidden w-full mx-auto h-screen">
+      <div id="Alldonations" class="hidden w-full m-5 mx-auto h-screen">
          <div class="">
             <label for="selectDonation" class="block mb-2 font-semibold">Track Undelivered Donation:</label>
+            <button onclick="getMyLocation()">📍 Show My Location</button>
+
             <select id="selectDonation" class="w-full p-2 border rounded">
               <option value="">-- Select Donation --</option>
               <% donation.forEach(d => { %>
@@ -429,7 +431,9 @@
    <script src="/javascript/datajs.js"></script>
    <script src="/javascript/AjaxForDelete.js"></script>
    <script src="/javascript/SwapComponents.js"></script>
+   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
    <script src="/javascript/Leaflet.js"></script>
+   
 
 
 
