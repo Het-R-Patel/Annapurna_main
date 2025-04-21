@@ -1,47 +1,63 @@
-const map = L.map('map').setView([23.0225, 72.5714], 11);
+let marker;
+if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async function (position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          var map = L.map('map').setView([lat,lon], 13);
+          setTimeout(() => {
+                map.invalidateSize();
+                
+              }, 2000);
+          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+              map.on('click', async function (e) {
+                const { lat, lng } = e.latlng;
+               
+                const address = await reverseGeocode(lat, lng);
+                if (marker) {
+                  map.removeLayer(marker);
+                }
+                marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup(`
+                  <div class="text-sm">
+                    <p><strong>Coordinates:</strong> ${lat.toFixed(5)}, ${lng.toFixed(5)}</p>
+                    <p><strong>Address:</strong><br>${address}</p>
+                    <button>OK</button>
+                  </div>
+                `)
+                .openPopup();
+              
+              
+              });
+              
+          
+        },
+        function (err) {
+          console.error("Error:", err.message);
+          alert("Could not get your exact location.");
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+     
 
-setTimeout(() => {
-  map.invalidateSize();
-}, 2000);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
-
-let marker; // store last marker
-
-document.getElementById('selectDonation').addEventListener('change', async function () {
-  const selected = this.options[this.selectedIndex];
-  const address = selected.dataset.address;
-
-  
-
-  if (!address) return;
-
-  try {
-    // Client-side request to OpenStreetMap's Nominatim
-    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
-    const data = await res.json();
-
-    if (data.length === 0) {
-      alert("Location not found");
-      return;
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
     }
 
-    const { lat, lon, display_name } = data[0];
+// const map = L.map('map').setView([23.0225, 72.5714], 11);
 
-    if (marker) map.removeLayer(marker); 
 
-    marker = L.marker([lat, lon]).addTo(map)
-      .bindPopup(display_name).openPopup();
 
-    map.setView([lat, lon], 14);
-  } catch (err) {
-    console.error(err);
-    alert("Error fetching coordinates");
-  }
-});
+
+
+
+
 
 async function reverseGeocode(lat, lon) {
   const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
@@ -62,27 +78,27 @@ async function reverseGeocode(lat, lon) {
 }
 
 
-function getMyLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      async function (position) {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
+// function getMyLocation() {
+//   if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(
+//       async function (position) {
+//         const lat = position.coords.latitude;
+//         const lon = position.coords.longitude;
  
-        const add= await reverseGeocode(lat, lon);
-        console.log("23.097951932394786, 72.55682387859547"+"DEvice lat -> "+lat+"device lon -> "+lon);
+//         const add= await reverseGeocode(lat, lon);
+//         console.log("23.097951932394786, 72.55682387859547"+"DEvice lat -> "+lat+"device lon -> "+lon);
         
-        map.setView([lat, lon], 14);
-        L.marker([lat, lon]).addTo(map).bindPopup(add).openPopup();
+//         map.setView([lat, lon], 14);
+//         L.marker([lat, lon]).addTo(map).bindPopup(add).openPopup();
     
        
-      },
-      function (err) {
-        console.error("Geolocation error:", err);
-        alert("Could not get your location.");
-      }
-    );
-  } else {
-    alert("Geolocation is not supported by your browser.");
-  }
-}
+//       },
+//       function (err) {
+//         console.error("Geolocation error:", err);
+//         alert("Could not get your location.");
+//       }
+//     );
+//   } else {
+//     alert("Geolocation is not supported by your browser.");
+//   }
+// }

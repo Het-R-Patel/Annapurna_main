@@ -454,9 +454,6 @@ video {
 .m-2{
   margin: 0.5rem;
 }
-.m-3{
-  margin: 0.75rem;
-}
 .m-5{
   margin: 1.25rem;
 }
@@ -523,6 +520,9 @@ video {
 }
 .h-6{
   height: 1.5rem;
+}
+.h-full{
+  height: 100%;
 }
 .max-h-14{
   max-height: 3.5rem;
