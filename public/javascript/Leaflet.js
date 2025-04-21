@@ -12,10 +12,12 @@ if (navigator.geolocation) {
           L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
               attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }).addTo(map);
+          L.marker([lat, lon]).addTo(map).bindPopup("Kaxit Chutio aii che ").openPopup();
               map.on('click', async function (e) {
                 const { lat, lng } = e.latlng;
                
                 const address = await reverseGeocode(lat, lng);
+                
                 if (marker) {
                   map.removeLayer(marker);
                 }
