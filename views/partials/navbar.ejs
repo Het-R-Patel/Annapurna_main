@@ -1,0 +1,38 @@
+<nav class="w-full p-4 shadow-md bg-navbarbg text-textcolor">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="#" class="text-xl font-bold">AnnaPurna</a>
+
+        <!-- Hamburger Icon -->
+        <button id="menu-btn" class="md:hidden focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
+
+        <!-- Menu Items -->
+        <ul id="menu" class="hidden md:flex space-x-6">
+            <li><a href="/" class="hover:underline">Home</a></li>
+            <li><a href="#" class="hover:underline">About Us</a></li>
+            <li><a href="/donate/donateform" class="hover:underline">Donate Food</a></li>
+            <li><a href="#" class="hover:underline">How It Works</a></li>
+            <li><a href="#" class="hover:underline">Contact Us</a></li>
+            <li><a href="/logout" class="hover:underline">Logout</a></li>
+            <li class="cursor-pointer" >
+                <a href="/dashboard"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" fill="#E2E8F0" width="24px"><path d="M520-600v-240h320v240H520ZM120-440v-400h320v400H120Zm400 320v-400h320v400H520Zm-400 0v-240h320v240H120Zm80-400h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg></a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Mobile Menu -->
+    <ul id="mobile-menu" class="hidden flex flex-col mt-4 space-y-4 md:hidden text-center">
+        <li><a href="/" class="block hover:underline">Home</a></li>
+        <li><a href="#" class="block hover:underline">About Us</a></li>
+        <li><a href="/donate/donateform" class="block hover:underline">Donate Food</a></li>
+        <li><a href="#" class="block hover:underline">How It Works</a></li>
+        <li><a href="#" class="block hover:underline">Contact Us</a></li>
+        <li><a href="/logout" class="block hover:underline">Logout</a></li>
+        <li>
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" ><path d="M520-600v-240h320v240H520ZM120-440v-400h320v400H120Zm400 320v-400h320v400H520Zm-400 0v-240h320v240H120Zm80-400h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg>
+        </li>
+    </ul>
+</nav>

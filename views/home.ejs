@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annapurna</title>
+    <link rel="stylesheet" href="/styles/style.css" type="text/css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-backgroundcolor">
+    <%- include('partials/navbar.ejs') %>
+    <section class="relative w-full h-screen bg-cover bg-center" style="background-image: url('/img-2.jpg');">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-center px-4">
+            <h1 class="text-white text-3xl md:text-5xl font-semibold">
+                "Every Meal Matters – Feed Those in Need!"
+            </h1>
+            <a href="donate/donateform" class="mt-4 px-6 py-3 bg-buttonbg text-white text-lg font-medium rounded hover:bg-blue-700 transition">
+                Donate
+            </a>
+        </div>
+    </section>
+    <div class="container mx-auto px-4 m-5 mt-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Card 1 -->
+            <div class="bg-bordercolor p-8 rounded-xl shadow-md text-center">
+                <h2 class="text-4xl font-semibold text-gray-900">10,000+</h2>
+                <p class="text-gray-600 mt-2 text-lg font-bold">Meals Donated</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-bordercolor  p-8 rounded-xl shadow-md text-center">
+                <h2 class="text-4xl font-semibold text-gray-900">5,000+</h2>
+                <p class="text-gray-600 mt-2 text-lg font-bold">People Helped</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4">
+        <div class="text-center text-white">
+            <h2 class="text-4xl font-semibold">How It Works?</h2>
+            <p class="text-lg mt-2">It starts from YOU!</p>
+        </div>
+        <div class="mt-8 bg-cardbg rounded-xl shadow-lg p-6">
+            <div class="space-y-4">
+                <!-- Step 1 -->
+                <div class="p-4 bg-bordercolor rounded-lg">
+                    <h3 class="text-lg font-bold">Step 1: Sign In</h3>
+                    <p class="text-gray-700">Create an account or log in to start the process of donating food.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="p-4 bg-bordercolor rounded-lg">
+                    <h3 class="text-lg font-bold">Step 2: Fill Form for Leftover Food</h3>
+                    <p class="text-gray-700">Provide details about the leftover food you wish to donate by filling out a simple form.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="p-4 bg-bordercolor rounded-lg">
+                    <h3 class="text-lg font-bold">Step 3: Quality Check and Allocation</h3>
+                    <p class="text-gray-700">We will assess the quality of the food and determine whether it is suitable for humans or animals.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="p-4 bg-bordercolor rounded-lg">
+                    <h3 class="text-lg font-bold">Step 4: Volunteer Pickup</h3>
+                    <p class="text-gray-700">Volunteers will come to your location to pick up the food donation at a scheduled time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-[#264653] text-white py-8 mt-6">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- About Section -->
+            <div>
+                <h2 class="text-xl font-semibold">Annapurna</h2>
+                <p class="mt-2 text-gray-300">Helping reduce food waste by connecting donors with those in need.</p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h2 class="text-xl font-semibold">Quick Links</h2>
+                <ul class="mt-2 space-y-2">
+                    <li><a href="#" class="hover:text-[#F4A261]">Home</a></li>
+                    <li><a href="#" class="hover:text-[#F4A261]">About Us</a></li>
+                    <li><a href="#" class="hover:text-[#F4A261]">Donate</a></li>
+                    <li><a href="#" class="hover:text-[#F4A261]">Contact</a></li>
+                </ul>
+            </div>
+            <!-- Contact Info -->
+            <div>
+                <h2 class="text-xl font-semibold">Contact Us</h2>
+                <p class="mt-2 text-gray-300">Email: support@annapurna.com</p>
+                <p class="text-gray-300">Phone: +91 123 456 7890</p>
+                <!-- Social Icons -->
+                <div class="flex space-x-4 mt-3">
+                    <a href="#" class="hover:text-[#F4A261]"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-[#F4A261]"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-[#F4A261]"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-6 border-t border-gray-500 pt-4 text-gray-300">
+            &copy; 2025 Annapurna. All Rights Reserved.
+        </div>
+    </footer>
+    
+   
+    
+</body>
+
+</html>
