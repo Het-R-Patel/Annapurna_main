@@ -7,25 +7,343 @@
    <link rel="stylesheet" href="/styles/style.css" />
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-   <script defer  src ="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-   <script src="/javascript/Leaflet.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
    <style>
-
-       body {
-           font-family: 'Inter', sans-serif;
-       }
+      body {
+         font-family: 'Inter', sans-serif;
+      }
    </style>
 
    <title>Annapurna</title>
- 
+
 </head>
 
 <body class="bg-backgroundcolor">
    <%- include('partials/navbar.ejs') %>
-   <div class="flex">
-      <aside class=" bg-bordercolor  flex flex-col  gap-5 p-5 shadow-lg h-screen  ">
+
+
+
+   <div class="flex w-full min-h-screen h-full">
+      <!-- Sidebar -->
+      <button id="sidebarToggle" class="xl:hidden fixed top-18 left-0 z-50 text-3xl text-white  ">
+         ☰
+      </button>
+
+
+      <aside id="dashboardSidebar"
+         class="relative top-22 left-0 min-h-screen w-64 bg-bordercolor/90 p-6 transform  -translate-x-full xl:translate-x-0  transition-transform duration-300 z-40 shadow-md">
+
+
+         <div id="profileToggle"
+            class="bg-[#028476] text-white font-bold rounded-lg p-3 mt-5 flex items-center gap-2 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" fill="currentColor">
+               <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
+                1.79-4 4 1.79 4 4 4zm0 2c-2.67 
+                0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+            <span><%= user.id.name %></span>
+         </div>
+
+
+         <nav class="space-y-4 text-lg font-semibold text-black">
+            <p id="dashboardToggle" class="flex cursor-pointer items-center gap-3 hover:text-[#264653]">
+               <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zM13 3v6h8V3h-8zm0 
+                  18h8v-10h-8v10z" />
+               </svg>
+               Dashboard
+            </p>
+            <p id="activeDonationsToggle" class="flex  cursor-pointer items-center gap-3 hover:text-[#264653]">
+               <svg xmlns="http://www.w3.org/2000/svg" height="20" fill="currentColor" viewBox="0 -960 960 960">
+                  <path
+                     d="M640-440 474-602q-31-30-52.5-66.5T400-748q0-55 38.5-93.5T532-880q32 0 60 13.5t48 36.5q20-23 48-36.5t60-13.5q55 0 93.5 38.5T880-748q0 43-21 79.5T807-602L640-440Zm0-112 109-107q19-19 35-40.5t16-48.5q0-22-15-37t-37-15q-14 0-26.5 5.5T700-778l-60 72-60-72q-9-11-21.5-16.5T532-800q-22 0-37 15t-15 37q0 27 16 48.5t35 40.5l109 107ZM280-220l278 76 238-74q-5-9-14.5-15.5T760-240H558q-27 0-43-2t-33-8l-93-31 22-78 81 27q17 5 40 8t68 4q0-11-6.5-21T578-354l-234-86h-64v220ZM40-80v-440h304q7 0 14 1.5t13 3.5l235 87q33 12 53.5 42t20.5 66h80q50 0 85 33t35 87v40L560-60l-280-78v58H40Zm80-80h80v-280h-80v280Zm520-546Z" />
+               </svg>
+               Active Donations
+            </p>
+            <p id="historyDonationToggle" class="flex cursor-pointer  items-center gap-3 hover:text-[#264653]">
+               <svg xmlns="http://www.w3.org/2000/svg" height="20" fill="currentColor" viewBox="0 -960 960 960">
+                  <path
+                     d="M480-120q-138 0-240.5-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm112-192L440-464v-216h80v184l128 128-56 56Z" />
+               </svg>
+               History
+            </p>
+         </nav>
+      </aside>
+
+
+      <!-- Content -->
+      <main class="flex-1 p-6 xl:ml-0 -ml-64 bg-[#22577A] min-h-screen text-white">
+         <div id="Dashboard" class="hidden mx-auto min-h-screen p-4">
+            <div class="max-w-5xl mx-auto text-black bg-bordercolor p-6 rounded-xl shadow-md space-y-8">
+               <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
+               <div class="grid md:grid-cols-2 grid-cols-1 md:gap-20 gap-5">
+                  <div class="max-w-xl flex justify-between  p-5   text-textcolor bg-buttonbg rounded-xl shadow-md ">
+                     <div>
+                        <p class="text-lg font-semibold">Meals Donated</p>
+                        <p class="text-2xl font-semibold mt-5">10</p>
+                     </div>
+
+                     <p class="p-4"><svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960"
+                           fill="currentColor">
+                           <path
+                              d="M285-80v-368q-52-11-88.5-52.5T160-600v-280h60v280h65v-280h60v280h65v-280h60v280q0 58-36.5 99.5T345-448v368h-60Zm415 0v-320H585v-305q0-79 48-127t127-48v800h-60Z" />
+                        </svg></p>
+
+
+                  </div>
+                  <div class="max-w-xl  bg-buttonbg rounded-xl shadow-md ">
+                     <div class="max-w-xl flex justify-between  p-5   text-textcolor bg-buttonbg rounded-xl shadow-md ">
+                        <div>
+                           <p class="text-lg font-semibold">Meals Donated</p>
+                           <p class="text-2xl font-semibold mt-5">10</p>
+                        </div>
+
+                        <p class="p-4"><svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960"
+                              fill="currentColor">
+                              <path
+                                 d="M285-80v-368q-52-11-88.5-52.5T160-600v-280h60v280h65v-280h60v280h65v-280h60v280q0 58-36.5 99.5T345-448v368h-60Zm415 0v-320H585v-305q0-79 48-127t127-48v800h-60Z" />
+                           </svg></p>
+                     </div>
+                  </div>
+               </div>
+               <h2 class="text-2xl font-bold text-gray-800">Active Donations</h2>
+               <!-- Card Grid Container -->
+               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+
+                  <!-- CARD 1 -->
+                  <div class="bg-white rounded-lg shadow-md border p-4 space-y-4 text-gray-800">
+                     <div class="text-lg font-semibold">1 Pizza</div>
+
+                     <div class="flex items-start space-x-2">
+                        <span class="material-icons text-blue-500">schedule</span>
+                        <div>
+                           <p class="text-sm font-medium text-blue-600">Pickup Date & Time</p>
+                           <p class="text-sm">Tuesday, April 22, 10:22 AM</p>
+                        </div>
+                     </div>
+
+                     <div class="flex items-start space-x-2">
+                        <span class="material-icons text-green-500">location_on</span>
+                        <div>
+                           <p class="text-sm font-medium text-green-600">Pickup Location</p>
+                           <p class="text-sm">
+                              1377 Oxford Court<br> Memphis, MS - 38118
+                           </p>
+                        </div>
+                     </div>
+
+                     <div class="flex items-start space-x-2">
+                        <span class="material-icons text-indigo-500">notes</span>
+                        <div>
+                           <p class="text-sm font-medium text-indigo-600">Specific Instructions</p>
+                           <p class="text-sm">Please handle with care.</p>
+                        </div>
+                     </div>
+
+                     <div class="pt-2">
+                        <div
+                           class="flex items-center space-x-2 text-orange-600 bg-orange-100 text-sm rounded-md px-3 py-2">
+                           <span class="material-icons text-orange-600 text-base">hourglass_empty</span>
+                           <span>Waiting for charities to accept</span>
+                        </div>
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+         </div>
+         <div id="Profile" class="hidden mx-auto min-h-screen p-4">
+            <div class="max-w-5xl mx-auto text-black bg-bordercolor p-6 rounded-xl shadow-md space-y-8">
+
+               <!-- Profile Heading -->
+               <h2 class="text-2xl font-bold text-gray-800">Update Your Profile</h2>
+
+               <!-- Profile Form -->
+               <form method="POST" action="/donate/update-profile" class="space-y-8">
+
+                  <!-- Personal Info -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                     <div>
+                        <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" value="<%= user.id.name %>" autocomplete="name"
+                           class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                           required>
+
+                     </div>
+                     <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" name="email" value="<%= user.id.email %>" autocomplete="email"
+                           class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                           disabled>
+                     </div>
+                     <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                        <input type="text" id="phone" name="phone" autocomplete="tel"
+                           class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                     </div>
+                     <div>
+                        <label for="dob" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" autocomplete="bday"
+                           class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                     </div>
+                  </div>
+
+                  <!-- Address Details -->
+                  <div class="border-t pt-6 space-y-4">
+                     <h3 class="text-lg font-semibold text-gray-800">Address</h3>
+                     <div class="grid grid-cols-1 gap-6">
+                        <div>
+                           <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                           <input type="text" id="address" name="address"
+                              class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- Password Section -->
+                  <div class="border-t pt-6 space-y-4">
+                     <h3 class="text-lg font-semibold text-gray-800">Change Password</h3>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                           <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current
+                              Password</label>
+                           <input type="password" id="currentPassword" name="currentPassword"
+                              class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                        </div>
+                        <div>
+                           <label for="newPassword" class="block text-sm font-medium text-gray-700">New
+                              Password</label>
+                           <input type="password" id="newPassword" name="newPassword"
+                              class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div class="pt-4 ">
+                     <button type="submit"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-md shadow">
+                        Update Profile
+                     </button>
+                  </div>
+               </form>
+            </div>
+         </div>
+         <div id="Alldonations" class="hidden mx-auto min-h-screen p-4">
+            <div class="max-w-5xl mx-auto text-black bg-bordercolor p-6 rounded-xl shadow-md space-y-8">
+
+               <h2 class="text-2xl font-bold text-gray-800">Active Donations</h2>
+
+
+
+               <!-- Card Grid Container -->
+               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+
+                  <!-- CARD 1 -->
+                  <div class="bg-white rounded-lg shadow-md border p-4 space-y-4 text-gray-800">
+                     <div class="text-lg font-semibold">1 Pizza</div>
+
+                     <div class="flex items-start space-x-2">
+                        <span class="material-icons text-blue-500">schedule</span>
+                        <div>
+                           <p class="text-sm font-medium text-blue-600">Pickup Date & Time</p>
+                           <p class="text-sm">Tuesday, April 22, 10:22 AM</p>
+                        </div>
+                     </div>
+
+                     <div class="flex items-start space-x-2">
+                        <span class="material-icons text-green-500">location_on</span>
+                        <div>
+                           <p class="text-sm font-medium text-green-600">Pickup Location</p>
+                           <p class="text-sm">
+                              1377 Oxford Court<br> Memphis, MS - 38118
+                           </p>
+                        </div>
+                     </div>
+
+                     <div class="flex items-start space-x-2">
+                        <span class="material-icons text-indigo-500">notes</span>
+                        <div>
+                           <p class="text-sm font-medium text-indigo-600">Specific Instructions</p>
+                           <p class="text-sm">Please handle with care.</p>
+                        </div>
+                     </div>
+
+                     <div class="pt-2">
+                        <div
+                           class="flex items-center space-x-2 text-orange-600 bg-orange-100 text-sm rounded-md px-3 py-2">
+                           <span class="material-icons text-orange-600 text-base">hourglass_empty</span>
+                           <span>Waiting for charities to accept</span>
+                        </div>
+                     </div>
+                  </div>
+
+
+               </div>
+
+            </div>
+         </div>
+
+         <div id="Rewards" class="hidden">
+            <div class="overflow-x-auto rounded">
+               <table class="min-w-full divide-y divide-gray-200 text-sm text-left rounded">
+                  <thead class="bg-datelink text-white">
+                     <tr>
+                        <th class="px-4 py-2">Full Name</th>
+                        <th class="px-4 py-2">Email</th>
+                        <th class="px-4 py-2">Phone</th>
+                        <th class="px-4 py-2">Address</th>
+                        <th class="px-4 py-2">Food Name</th>
+                        <th class="px-4 py-2">Quantity</th>
+                        <th class="px-4 py-2">Delivery Status</th>
+                        <th class="px-4 py-2">Expiry/Date</th>
+                        <th class="px-4 py-2">Actions</th>
+                     </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-100">
+                     <% donation.forEach(donation => { %>
+                     <tr>
+                        <td class="px-4 py-2"><%= donation.donorName %></td>
+                        <td class="px-4 py-2"><%= donation.email %></td>
+                        <td class="px-4 py-2"><%= donation.phone %></td>
+                        <td class="px-4 py-2"><%= donation.address %></td>
+                        <td class="px-4 py-2"><%= donation.foodName %> (<%= donation.foodType %>)</td>
+                        <td class="px-4 py-2"><%= donation.quantity %> Kg</td>
+                        <td class="px-4 py-2"><%= donation. deliverystatus %></td>
+   
+                        <td class="px-4 py-2"><%= donation.createdAt.toLocaleDateString() %></td>
+                        <td class="px-4 py-2 flex gap-2">
+                        
+                           <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                              data-id="<%= donation._id %>">
+                              Delete
+                           </button>
+   
+                           <button class="view-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                              data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
+                              data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
+                              data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
+                              data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
+                              data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>"
+                              data-date="<%= donation.createdAt.toLocaleDateString() %>">
+                              View
+                           </button>
+   
+                        </td>
+                     </tr>
+                     <% }); %>
+                  </tbody>
+   
+               </table>
+
+         </div>
+      </main>
+   </div>
+
+
+
+   <!-- <aside class=" bg-bordercolor  flex flex-col  gap-5 p-5 shadow-lg h-screen  ">
          <div class="bg-emerald-600  text-white cursor-pointer rounded-lg text-xl " id="profileToggle">
             <div class="flex gap-3 p-2 ">
                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px">
@@ -64,10 +382,10 @@
             </div>
          </div>
 
-      </aside>
-      <div id="Dashboard" class="flex hidden h-screen  flex-col">
-         <div class=" flex max-h-14 m-2 rounded-md w-[100%] justify-between md:flex-row flex-col">
-            <!-- <div><input
+      </aside> -->
+   <divclass=" hidden h-screen flex-col">
+      <div class=" flex max-h-14 m-2 rounded-md w-[100%] justify-between md:flex-row flex-col">
+         <!-- <div><input
                   class=" hidden bg-cardbg w- rounded-md m-2 px-2 py-1 outline-none focus:outline-none focus:ring-2 focus:ring-white  text-xl  "
                   type="search" name="" id="">
                <select
@@ -76,222 +394,218 @@
                   <option value="">Sort</option>
                </select>
             </div> -->
-            <p class=" rounded m-2 px-2 py-1 text-xl  bg-cardbg flex gap-2 text-end">Total Donations :
-               <%= donation.length %></p>
-         </div>
-         <div class="w-[100%] h-screen m-2 p-2">
-            <div class="overflow-x-auto rounded">
-               <table class="min-w-full divide-y divide-gray-200 text-sm text-left rounded">
-                  <thead class="bg-datelink text-white">
-                     <tr>
-                        <th class="px-4 py-2">Full Name</th>
-                        <th class="px-4 py-2">Email</th>
-                        <th class="px-4 py-2">Phone</th>
-                        <th class="px-4 py-2">Address</th>
-                        <th class="px-4 py-2">Food Name</th>
-                        <th class="px-4 py-2">Quantity</th>
-                        <th class="px-4 py-2">Delivery Status</th>
-                        <th class="px-4 py-2">Expiry/Date</th>
-                        <th class="px-4 py-2">Actions</th>
-                     </tr>
-                  </thead>
-                  <tbody class="bg-white divide-y divide-gray-100">
-                     <% donation.forEach(donation => { %>
-                     <tr>
-                        <td class="px-4 py-2"><%= donation.donorName %></td>
-                        <td class="px-4 py-2"><%= donation.email %></td>
-                        <td class="px-4 py-2"><%= donation.phone %></td>
-                        <td class="px-4 py-2"><%= donation.address %></td>
-                        <td class="px-4 py-2"><%= donation.foodName %> (<%= donation.foodType %>)</td>
-                        <td class="px-4 py-2"><%= donation.quantity %> Kg</td>
-                        <td class="px-4 py-2"><%= donation. deliverystatus %></td>
+         <p class=" rounded m-2 px-2 py-1 text-xl  bg-cardbg flex gap-2 text-end">Total Donations :
+            <%= donation.length %></p>
+      </div>
+      <div class="w-[100%] h-screen m-2 p-2">
+         <div class="overflow-x-auto rounded">
+            <table class="min-w-full divide-y divide-gray-200 text-sm text-left rounded">
+               <thead class="bg-datelink text-white">
+                  <tr>
+                     <th class="px-4 py-2">Full Name</th>
+                     <th class="px-4 py-2">Email</th>
+                     <th class="px-4 py-2">Phone</th>
+                     <th class="px-4 py-2">Address</th>
+                     <th class="px-4 py-2">Food Name</th>
+                     <th class="px-4 py-2">Quantity</th>
+                     <th class="px-4 py-2">Delivery Status</th>
+                     <th class="px-4 py-2">Expiry/Date</th>
+                     <th class="px-4 py-2">Actions</th>
+                  </tr>
+               </thead>
+               <tbody class="bg-white divide-y divide-gray-100">
+                  <% donation.forEach(donation => { %>
+                  <tr>
+                     <td class="px-4 py-2"><%= donation.donorName %></td>
+                     <td class="px-4 py-2"><%= donation.email %></td>
+                     <td class="px-4 py-2"><%= donation.phone %></td>
+                     <td class="px-4 py-2"><%= donation.address %></td>
+                     <td class="px-4 py-2"><%= donation.foodName %> (<%= donation.foodType %>)</td>
+                     <td class="px-4 py-2"><%= donation.quantity %> Kg</td>
+                     <td class="px-4 py-2"><%= donation. deliverystatus %></td>
 
-                        <td class="px-4 py-2"><%= donation.createdAt.toLocaleDateString() %></td>
-                        <td class="px-4 py-2 flex gap-2">
-                           <button class="update-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                              data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
-                              data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
-                              data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
-                              data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
-                              data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>">
-                              Update
-                           </button>
+                     <td class="px-4 py-2"><%= donation.createdAt.toLocaleDateString() %></td>
+                     <td class="px-4 py-2 flex gap-2">
+                        <button class="update-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                           data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
+                           data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
+                           data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
+                           data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
+                           data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>">
+                           Update
+                        </button>
 
 
-                           <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                              data-id="<%= donation._id %>">
-                              Delete
-                           </button>
+                        <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                           data-id="<%= donation._id %>">
+                           Delete
+                        </button>
 
-                           <button class="view-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                              data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
-                              data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
-                              data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
-                              data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
-                              data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>"
-                              data-date="<%= donation.createdAt.toLocaleDateString() %>">
-                              View
-                           </button>
+                        <button class="view-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                           data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
+                           data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
+                           data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
+                           data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
+                           data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>"
+                           data-date="<%= donation.createdAt.toLocaleDateString() %>">
+                           View
+                        </button>
 
-                        </td>
-                     </tr>
-                     <% }); %>
-                  </tbody>
+                     </td>
+                  </tr>
+                  <% }); %>
+               </tbody>
 
-               </table>
-               <!-- Modal  for view -->
-               <div id="viewModal"
-                  class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50">
-                  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
-                     <button id="closeModal"
-                        class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl font-bold">&times;</button>
-                     <h2 class="text-xl font-bold mb-4">Donation Details</h2>
-                     <table class="w-full table-auto border-collapse">
-                        <tbody>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Name:</td>
-                              <td id="modalName" class="py-2"></td>
-                           </tr>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Email:</td>
-                              <td id="modalEmail" class="py-2"></td>
-                           </tr>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Phone:</td>
-                              <td id="modalPhone" class="py-2"></td>
-                           </tr>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Address:</td>
-                              <td id="modalAddress" class="py-2"></td>
-                           </tr>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Food:</td>
-                              <td id="modalFood" class="py-2"></td>
-                           </tr>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Type:</td>
-                              <td id="modalType" class="py-2"></td>
-                           </tr>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Quantity:</td>
-                              <td id="modalQuantity" class="py-2"></td>
-                           </tr>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Delivery Status:</td>
-                              <td id="modalDelivery" class="py-2"></td>
-                           </tr>
-                           <tr class="border-b">
-                              <td class="font-semibold py-2 pr-4">Status:</td>
-                              <td id="modalStatus" class="py-2"></td>
-                           </tr>
-                           <tr>
-                              <td class="font-semibold py-2 pr-4">Date:</td>
-                              <td id="modalDate" class="py-2"></td>
-                           </tr>
-                        </tbody>
-                     </table>
+            </table>
+            <!-- Modal  for view -->
+            <div id="viewModal"
+               class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50">
+               <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
+                  <button id="closeModal"
+                     class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl font-bold">&times;</button>
+                  <h2 class="text-xl font-bold mb-4">Donation Details</h2>
+                  <table class="w-full table-auto border-collapse">
+                     <tbody>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Name:</td>
+                           <td id="modalName" class="py-2"></td>
+                        </tr>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Email:</td>
+                           <td id="modalEmail" class="py-2"></td>
+                        </tr>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Phone:</td>
+                           <td id="modalPhone" class="py-2"></td>
+                        </tr>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Address:</td>
+                           <td id="modalAddress" class="py-2"></td>
+                        </tr>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Food:</td>
+                           <td id="modalFood" class="py-2"></td>
+                        </tr>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Type:</td>
+                           <td id="modalType" class="py-2"></td>
+                        </tr>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Quantity:</td>
+                           <td id="modalQuantity" class="py-2"></td>
+                        </tr>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Delivery Status:</td>
+                           <td id="modalDelivery" class="py-2"></td>
+                        </tr>
+                        <tr class="border-b">
+                           <td class="font-semibold py-2 pr-4">Status:</td>
+                           <td id="modalStatus" class="py-2"></td>
+                        </tr>
+                        <tr>
+                           <td class="font-semibold py-2 pr-4">Date:</td>
+                           <td id="modalDate" class="py-2"></td>
+                        </tr>
+                     </tbody>
+                  </table>
 
-                  </div>
                </div>
-               <!-- model for update -->
-               <div id="updateModal"
-                  class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50">
-                  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-                     <button id="closeUpdateModal"
-                        class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl font-bold">&times;</button>
-                     <h2 class="text-xl font-bold mb-4">Update Donation</h2>
-                     <form id="updateForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input type="hidden" name="id" id="updateId" />
+            </div>
+            <!-- model for update -->
+            <div id="updateModal"
+               class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50">
+               <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
+                  <button id="closeUpdateModal"
+                     class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl font-bold">&times;</button>
+                  <h2 class="text-xl font-bold mb-4">Update Donation</h2>
+                  <form id="updateForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <input type="hidden" name="id" id="updateId" />
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Full Name</label>
-                           <input type="text" id="updateName" name="donorName"
-                              class="w-full border rounded px-3 py-2 mt-1">
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Full Name</label>
+                        <input type="text" id="updateName" name="donorName"
+                           class="w-full border rounded px-3 py-2 mt-1">
+                     </div>
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Email</label>
-                           <input type="email" id="updateEmail" name="email"
-                              class="w-full border rounded px-3 py-2 mt-1">
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Email</label>
+                        <input type="email" id="updateEmail" name="email" class="w-full border rounded px-3 py-2 mt-1">
+                     </div>
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Phone</label>
-                           <input type="text" id="updatePhone" name="phone"
-                              class="w-full border rounded px-3 py-2 mt-1">
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Phone</label>
+                        <input type="text" id="updatePhone" name="phone" class="w-full border rounded px-3 py-2 mt-1">
+                     </div>
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Address</label>
-                           <input type="text" id="updateAddress" name="address"
-                              class="w-full border rounded px-3 py-2 mt-1">
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Address</label>
+                        <input type="text" id="updateAddress" name="address"
+                           class="w-full border rounded px-3 py-2 mt-1">
+                     </div>
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Food Name</label>
-                           <input type="text" id="updateFood" name="foodName"
-                              class="w-full border rounded px-3 py-2 mt-1">
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Food Name</label>
+                        <input type="text" id="updateFood" name="foodName" class="w-full border rounded px-3 py-2 mt-1">
+                     </div>
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Food Type</label>
-                           <select id="updateType" name="foodType" class="w-full border rounded px-3 py-2 mt-1">
-                              <option value="veg">Veg</option>
-                              <option value="non-veg">Non-Veg</option>
-                           </select>
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Food Type</label>
+                        <select id="updateType" name="foodType" class="w-full border rounded px-3 py-2 mt-1">
+                           <option value="veg">Veg</option>
+                           <option value="non-veg">Non-Veg</option>
+                        </select>
+                     </div>
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Quantity (Kg)</label>
-                           <input type="number" id="updateQuantity" name="quantity"
-                              class="w-full border rounded px-3 py-2 mt-1">
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Quantity (Kg)</label>
+                        <input type="number" id="updateQuantity" name="quantity"
+                           class="w-full border rounded px-3 py-2 mt-1">
+                     </div>
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Package Status</label>
-                           <select id="updateStatus" name="status" class="w-full border rounded px-3 py-2 mt-1">
-                              <option value="packaged">Packaged</option>
-                              <option value="unpackaged">Unpackaged</option>
-                           </select>
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Package Status</label>
+                        <select id="updateStatus" name="status" class="w-full border rounded px-3 py-2 mt-1">
+                           <option value="packaged">Packaged</option>
+                           <option value="unpackaged">Unpackaged</option>
+                        </select>
+                     </div>
 
-                        <div class="col-span-full sm:col-span-1">
-                           <label class="block text-gray-700">Delivery Status</label>
-                           <select id="updateDelivery" name="deliverystatus"
-                              class="w-full border rounded px-3 py-2 mt-1">
-                              <option value="delivered">delivered</option>
-                              <!-- <option value="in-progress">In Progress</option> -->
-                              <option value="not delivered">not delivered</option>
-                           </select>
-                        </div>
+                     <div class="col-span-full sm:col-span-1">
+                        <label class="block text-gray-700">Delivery Status</label>
+                        <select id="updateDelivery" name="deliverystatus" class="w-full border rounded px-3 py-2 mt-1">
+                           <option value="delivered">delivered</option>
+                           <!-- <option value="in-progress">In Progress</option> -->
+                           <option value="not delivered">not delivered</option>
+                        </select>
+                     </div>
 
-                        <div class="col-span-full mt-4">
-                           <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                              Save Changes
-                           </button>
-                        </div>
-                     </form>
+                     <div class="col-span-full mt-4">
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                           Save Changes
+                        </button>
+                     </div>
+                  </form>
 
-                  </div>
                </div>
-
-
             </div>
 
+
          </div>
+
+      </div>
       </div>
 
-      <div id="Profile" class="hidden mx-auto h-screen"> 
+      <!-- <div class="hidden mx-auto h-screen">
          <div class="  p-6  min-h-screen items-center justify-center ">
             <div class="w-full  bg-white p-6 rounded-xl shadow-md space-y-8">
 
-               <!-- Profile Heading -->
+           
                <h2 class="text-2xl font-bold text-gray-800">Update Your Profile</h2>
 
-               <!-- Profile Form -->
+           
                <form method="POST" action="/donate/update-profile" class="space-y-6 text-lg">
 
-                  <!-- Personal Info -->
+        
                   <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                      <div>
                         <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
@@ -315,7 +629,7 @@
                      </div>
                   </div>
 
-                  <!-- Address Details -->
+           
                   <div class="space-y-4 border-t pt-6">
                      <h3 class="text-lg font-medium text-gray-800">Address</h3>
                      <div class="grid p-1 px-3 grid-cols-1 md:grid-cols-2 gap-6">
@@ -347,7 +661,7 @@
                      </div>
                   </div>
 
-                  <!-- Password Section -->
+  
                   <div class="border-t pt-6 space-y-4">
                      <h3 class="text-lg font-medium text-gray-800">Change Password</h3>
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -365,7 +679,7 @@
                      </div>
                   </div>
 
-                  <!-- Submit -->
+        
                   <div class="pt-4">
                      <button type="submit"
                         class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow">Update
@@ -374,60 +688,66 @@
                </form>
             </div>
          </div>
-      </div>
-      <div id="Alldonations" class="hidden w-full  mx-auto h-screen">
-
-          <!-- Leaflet Map Container -->
-          <div id="map" class="h-full w-full"></div>
-
-          
-      </div>
-
-      <div id="Rewards" class="hidden">
-         <h1>THis is rewards</h1>
-      </div>
-   </div>
-
-   <script>
+      </div> -->
 
 
-      const viewButtons = document.querySelectorAll('.view-btn');
-      const modal = document.getElementById('viewModal');
-      const closeModal = document.getElementById('closeModal');
 
-      viewButtons.forEach(button => {
-         button.addEventListener('click', () => {
-            document.getElementById('modalName').textContent = button.dataset.name;
-            document.getElementById('modalEmail').textContent = button.dataset.email;
-            document.getElementById('modalPhone').textContent = button.dataset.phone;
-            document.getElementById('modalAddress').textContent = button.dataset.address;
-            document.getElementById('modalFood').textContent = button.dataset.food;
-            document.getElementById('modalType').textContent = button.dataset.type;
-            document.getElementById('modalQuantity').textContent = button.dataset.quantity + ' Kg';
-            document.getElementById('modalDelivery').textContent = button.dataset.delivery;
-            document.getElementById('modalStatus').textContent = button.dataset.status;
-            document.getElementById('modalDate').textContent = button.dataset.date;
 
-            modal.classList.remove('hidden');
+      <script>
+
+
+         const viewButtons = document.querySelectorAll('.view-btn');
+         const modal = document.getElementById('viewModal');
+         const closeModal = document.getElementById('closeModal');
+
+         viewButtons.forEach(button => {
+            button.addEventListener('click', () => {
+               document.getElementById('modalName').textContent = button.dataset.name;
+               document.getElementById('modalEmail').textContent = button.dataset.email;
+               document.getElementById('modalPhone').textContent = button.dataset.phone;
+               document.getElementById('modalAddress').textContent = button.dataset.address;
+               document.getElementById('modalFood').textContent = button.dataset.food;
+               document.getElementById('modalType').textContent = button.dataset.type;
+               document.getElementById('modalQuantity').textContent = button.dataset.quantity + ' Kg';
+               document.getElementById('modalDelivery').textContent = button.dataset.delivery;
+               document.getElementById('modalStatus').textContent = button.dataset.status;
+               document.getElementById('modalDate').textContent = button.dataset.date;
+
+               modal.classList.remove('hidden');
+            });
          });
-      });
 
-      closeModal.addEventListener('click', () => {
-         modal.classList.add('hidden');
-      });
+         closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+         });
 
-      // Optional: Close modal when clicking outside
-      modal.addEventListener('click', (e) => {
-         if (e.target === modal) modal.classList.add('hidden');
-      });
+         // Optional: Close modal when clicking outside
+         modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.add('hidden');
+         });
 
 
-   </script>
-   <script src="/javascript/datajs.js"></script>
-   <script src="/javascript/AjaxForDelete.js"></script>
-   <script src="/javascript/SwapComponents.js"></script>
+      </script>
+      <!-- Sidebar JS -->
+      <script>
+         document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('dashboardSidebar');
 
-   
+            toggleBtn?.addEventListener('click', (e) => {
+
+               sidebar.classList.toggle('-translate-x-full');
+
+
+            });
+           
+         });
+      </script>
+      <script src="/javascript/datajs.js"></script>
+      <script src="/javascript/AjaxForDelete.js"></script>
+      <script src="/javascript/SwapComponents.js"></script>
+
+
 
 
 

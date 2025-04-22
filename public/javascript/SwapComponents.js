@@ -2,43 +2,39 @@ const Dashboard = document.getElementById("Dashboard");
 const Alldonations = document.getElementById("Alldonations");
 const Rewards = document.getElementById("Rewards");
 const Profile = document.getElementById("Profile");
+const sidebar = document.getElementById('dashboardSidebar');
 
-const alldonationsToggle=document.getElementById("alldonationsToggle");
+const activeDonationsToggle=document.getElementById("activeDonationsToggle");
 const dashboardToggle=document.getElementById("dashboardToggle")
 const profileToggle=document.getElementById("profileToggle")
-const rewardsToggle=document.getElementById("rewardsToggle")
-
+const historyDonationToggle=document.getElementById("historyDonationToggle")
+Profile.classList.remove("hidden");
 document.getElementById("dashboardToggle").addEventListener("click", () => {
   Dashboard.classList.remove("hidden");
   Alldonations.classList.add("hidden");
   Rewards.classList.add("hidden");
   Profile.classList.add("hidden");
-  dashboardToggle.classList.add("bg-datelink","text-white");
-  alldonationsToggle.classList.remove("bg-datelink","text-white");
-  profileToggle.classList.remove("bg-datelink","text-white");
-  rewardsToggle.classList.remove("bg-datelink","text-white");
+  sidebar.classList.toggle('-translate-x-full');
+
 
 });
 
-document.getElementById("alldonationsToggle").addEventListener("click", () => {
+document.getElementById("activeDonationsToggle").addEventListener("click", () => {
   Dashboard.classList.add("hidden");
   Alldonations.classList.remove("hidden");
   Rewards.classList.add("hidden");
   Profile.classList.add("hidden");
-  dashboardToggle.classList.remove("bg-datelink","text-white");
-  alldonationsToggle.classList.add("bg-datelink","text-white");
-  profileToggle.classList.remove("bg-datelink","text-white");
-  rewardsToggle.classList.remove("bg-datelink","text-white");
+  sidebar.classList.toggle('-translate-x-full');
+
 });
-document.getElementById("rewardsToggle").addEventListener("click", () => {
+document.getElementById("historyDonationToggle").addEventListener("click", () => {
   Dashboard.classList.add("hidden");
   Alldonations.classList.add("hidden");
   Rewards.classList.remove("hidden");
   Profile.classList.add("hidden");
-  dashboardToggle.classList.remove("bg-datelink","text-white");
-  alldonationsToggle.classList.remove("bg-datelink","text-white");
-  profileToggle.classList.remove("bg-datelink","text-white");
-  rewardsToggle.classList.add("bg-datelink","text-white");
+  sidebar.classList.toggle('-translate-x-full');
+
+
 
 });
 document.getElementById("profileToggle").addEventListener("click", () => {
@@ -46,8 +42,6 @@ document.getElementById("profileToggle").addEventListener("click", () => {
   Alldonations.classList.add("hidden");
   Rewards.classList.add("hidden");
   Profile.classList.remove("hidden");
-  dashboardToggle.classList.remove("bg-datelink","text-white");
-  alldonationsToggle.classList.remove("bg-datelink","text-white");
-  profileToggle.classList.add("bg-datelink","text-white");
-  rewardsToggle.classList.remove("bg-datelink","text-white");
+  sidebar.classList.toggle('-translate-x-full');
+
 });

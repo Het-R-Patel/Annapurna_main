@@ -11,6 +11,11 @@ router.delete("/delete/:id",DeleteOrderDetails);
 
 router.post("/update-profile",UpdateUserProfile)
 
+router.get("/about",(req,res)=>{
+    res.render("contact")
+})
+
+
 
 
 
