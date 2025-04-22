@@ -32,6 +32,7 @@ exports.login = async (req, res) => {
 
   const token = createToken({id:user._id,name:user.fullName,email:user.email});
     res.cookie("jwt", token, { httpOnly: true });
+    
   res.redirect("/");
 };
 

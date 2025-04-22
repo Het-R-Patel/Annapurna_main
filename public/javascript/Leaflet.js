@@ -1,18 +1,18 @@
 let marker;
-if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async function (position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          var map = L.map('map').setView([lat,lon], 13);
-          setTimeout(() => {
-                map.invalidateSize();
+// if (navigator.geolocation) {
+//       navigator.geolocation.getCurrentPosition(
+//         async function (position) {
+//           const lat = position.coords.latitude;
+//           const lon = position.coords.longitude;
+          const map = L.map('map').setView([51.505, -0.09], 13);
+          // setTimeout(() => {
+          //       map.invalidateSize();
                 
-              }, 2000);
+          //     }, 2000);
           L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
               attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           }).addTo(map);
-          L.marker([lat, lon]).addTo(map).bindPopup("Kaxit Chutio aii che ").openPopup();
+  
               map.on('click', async function (e) {
                 const { lat, lng } = e.latlng;
                
@@ -35,22 +35,22 @@ if (navigator.geolocation) {
               });
               
           
-        },
-        function (err) {
-          console.error("Error:", err.message);
-          alert("Could not get your exact location.");
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0
-        }
+    //     },
+    //     function (err) {
+    //       console.error("Error:", err.message);
+    //       alert("Could not get your exact location.");
+    //     },
+    //     {
+    //       enableHighAccuracy: true,
+    //       timeout: 10000,
+    //       maximumAge: 0
+    //     }
      
 
-      );
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
+    //   );
+    // } else {
+    //   alert("Geolocation is not supported by your browser.");
+    // }
 
 // const map = L.map('map').setView([23.0225, 72.5714], 11);
 
