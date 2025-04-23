@@ -5,60 +5,75 @@ const User = require("../models/User");
 
 
 async function addDonation(req, res) {
-  try {
-    const {
-      name,
-      phone,
-      houseNo,
-      street,
-      city,
-      state,
-      pincode,
-      food_name,
-      quantity,
-      expiry_date,
-      food_type,
-      packaging_status,
-      pickup_time,
-      notes,
-    } = req.body;
-    const fullAddress = `${houseNo}, ${street}, ${city}, ${state}, ${pincode}`;
-    // if (
-    //   !name ||
-    //   !email ||
-    //   !phone ||
-    //   ! ||
-    //   !food_name ||
-    //   !quantity ||
-    //   !expiry_date
-    // ) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Please fill in all required fields",
-    //   });
-    // }
+  const {
+    fullName,
+    email,
+    phone,
+    address,
+    foodName,
+    quantity,
+    preparedDate,
+    foodType,
+    packagingStatus,
+    additionalNotes,
+    preferredPickupTime,
+    pickupDate,
+    landmark,
+    specialInstructions
+  } = req.body;
 
-    const newDonation = new FoodDonation({
-      donorName: name,
-      email:req.user.id.email,
+
+  let errors = {};
+
+  if (!fullName || fullName.trim().length === 0) errors.fullName = "Full Name is required";
+  if (!email || !email.includes('@')) errors.email = "Enter a valid email";
+  if (!phone || phone.length !== 10) errors.phone = "Phone must be 10 digits";
+  if (!address || address.length < 10) errors.address = "Address must be at least 10 characters";
+  if (!foodName) errors.foodName = "Food name is required";
+  if (!quantity) errors.quantity = "Quantity is required";
+  if (!preparedDate) errors.preparedDate = "Prepared date is required";
+  if (!foodType) errors.foodType = "Select a food type";
+  if (!packagingStatus) errors.packagingStatus = "Select packaging status";
+  if (!preferredPickupTime) errors.preferredPickupTime = "Pickup time required";
+  if (!pickupDate) errors.pickupDate = "Pickup date required";
+
+  if (Object.keys(errors).length > 0) {
+    
+    return res.json({
+      formData: req.body,
+      errors,
+      success: false
+    });
+  }
+
+  try {
+    const donation = new FoodDonation({
+      fullName,
+      email,
       phone,
-      address: fullAddress,
-      foodName: food_name,
-      foodType: food_type,
+      address,
+      foodName,
       quantity,
-      additionalNotes: notes,
-      expiry_date,
-      status: packaging_status,
+      preparedDate,
+      foodType,
+      packagingStatus,
+      additionalNotes,
+      preferredPickupTime,
+      pickupDate,
+      landmark,
+      specialInstructions
     });
 
-    await newDonation.save();
-
-    res.status(201).redirect("/dashboard");
-  } catch (error) {
-    console.error("Error adding donation:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error adding donation", error });
+    await donation.save();
+    return res.json({
+      success: true
+    })
+  } catch (err) {
+    console.error("Error saving donation:", err);
+    res.json({
+      formData: req.body,
+      errors: { general: "Something went wrong. Please try again." }
+    });
   }
 }
 
@@ -66,12 +81,17 @@ async function getDashboard(req, res) {
   try {
     const donations = await FoodDonation.find({
       email: req.user.id.email,
-    }).sort({ createdAt: -1 }); // latest first
-    const address = await User.find({
+    }).sort({ createdAt: -1 });
+    console.log(donations)
+
+    const userData = await User.find({
       email: req.user.id.email,
       
-    },{address:1 ,_id:0});
-    res.render("data", { donation: donations, user: req.user, User: address[0] });
+    });
+  
+
+    
+    res.render("data", { donation: donations,user:req.user, User: userData[0]});
   } catch (err) {
     console.error("Error fetching dashboard data:", err);
     res.status(500).send("Something went wrong");
@@ -114,21 +134,29 @@ async function RenderDonationForm(req, res) {
 }
 
 async function UpdateUserProfile(req, res) {
+ 
+  if (!errors.isEmpty()) {
+    const errorObj = {};
+    errors.array().forEach(err => {
+      errorObj[err.path] = err.msg;
+    });
+
+    req.flash("signupErrors", errorObj);
+    req.flash("formData", req.body);
+    req.flash("showSignupModal", true); 
+    return res.redirect("/");
+  }
   try {
     const {
       fullName,
       phone,
       dob,
-      houseNo,
-      street,
-      city,
-      state,
-      pincode,
+      address,
       currentPassword,
       newPassword,
     
     } = req.body;
-
+    
 
     const user = await User.findOne({email:req.user.id.email });
 
@@ -139,8 +167,7 @@ async function UpdateUserProfile(req, res) {
     user.fullName = fullName;
     user.phone = phone;
     user.dob = dob;
-
-    user.address = { houseNo, street, city, state, pincode };
+    user.address = address;
     
     if (currentPassword && newPassword) {
       if (!user || !(await user.comparePassword(currentPassword))) {

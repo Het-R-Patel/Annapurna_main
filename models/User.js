@@ -7,15 +7,8 @@ const userSchema = new mongoose.Schema({
   phone: String,
   dob: String,
   password: String,
-  address: {
-    houseNo: String,
-    street: String,
-    city: String,
-    state: String,
-    pincode: String
-  },
-  latitude: Number,
-  longitude: Number,
+  address: String,
+  
 });
 
 userSchema.pre("save", async function (next) {

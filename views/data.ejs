@@ -42,7 +42,7 @@
                 1.79-4 4 1.79 4 4 4zm0 2c-2.67 
                 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
             </svg>
-            <span><%= user.id.name %></span>
+            <span><%= User.fullName %></span>
          </div>
 
 
@@ -81,7 +81,7 @@
                   <div class="max-w-xl flex justify-between  p-5   text-textcolor bg-buttonbg rounded-xl shadow-md ">
                      <div>
                         <p class="text-lg font-semibold">Meals Donated</p>
-                        <p class="text-2xl font-semibold mt-5">10</p>
+                        <p class="text-2xl font-semibold mt-5"><%= donation.length %></p>
                      </div>
 
                      <p class="p-4"><svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960"
@@ -95,7 +95,7 @@
                   <div class="max-w-xl  bg-buttonbg rounded-xl shadow-md ">
                      <div class="max-w-xl flex justify-between  p-5   text-textcolor bg-buttonbg rounded-xl shadow-md ">
                         <div>
-                           <p class="text-lg font-semibold">Meals Donated</p>
+                           <p class="text-lg font-semibold">Charities Helped</p>
                            <p class="text-2xl font-semibold mt-5">10</p>
                         </div>
 
@@ -110,16 +110,29 @@
                <h2 class="text-2xl font-bold text-gray-800">Active Donations</h2>
                <!-- Card Grid Container -->
                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                  <% donation.forEach(don => { %>
+                  <% const date = new Date(don.pickupDate);
 
-                  <!-- CARD 1 -->
+                     const options = {
+                       weekday: 'long',   
+                       year: 'numeric',
+                       month: 'long',    
+                       day: 'numeric',   
+                       hour: 'numeric',   
+                       minute: 'numeric', 
+                       hour12: true,     
+                     };
+                     
+                     const formatted = date.toLocaleString('en-US', options);
+                    %>
                   <div class="bg-white rounded-lg shadow-md border p-4 space-y-4 text-gray-800">
-                     <div class="text-lg font-semibold">1 Pizza</div>
+                     <div class="text-lg font-semibold"><%= don.quantity %> <%= don.foodName %></div>
 
                      <div class="flex items-start space-x-2">
                         <span class="material-icons text-blue-500">schedule</span>
                         <div>
                            <p class="text-sm font-medium text-blue-600">Pickup Date & Time</p>
-                           <p class="text-sm">Tuesday, April 22, 10:22 AM</p>
+                           <p class="text-sm"><%= formatted %></p>
                         </div>
                      </div>
 
@@ -128,7 +141,7 @@
                         <div>
                            <p class="text-sm font-medium text-green-600">Pickup Location</p>
                            <p class="text-sm">
-                              1377 Oxford Court<br> Memphis, MS - 38118
+                              <%= don.address %>
                            </p>
                         </div>
                      </div>
@@ -137,18 +150,26 @@
                         <span class="material-icons text-indigo-500">notes</span>
                         <div>
                            <p class="text-sm font-medium text-indigo-600">Specific Instructions</p>
-                           <p class="text-sm">Please handle with care.</p>
+                           <p class="text-sm"><%= don.specialInstructions %></p>
                         </div>
                      </div>
 
                      <div class="pt-2">
+                        <% if (don.deliverystatus == "not delivered") { %>
                         <div
                            class="flex items-center space-x-2 text-orange-600 bg-orange-100 text-sm rounded-md px-3 py-2">
                            <span class="material-icons text-orange-600 text-base">hourglass_empty</span>
                            <span>Waiting for charities to accept</span>
                         </div>
+
+                        <% } %>
+
                      </div>
                   </div>
+
+                  <% }) %>
+
+
 
                </div>
             </div>
@@ -166,25 +187,26 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                      <div>
                         <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <input type="text" id="fullName" name="fullName" value="<%= user.id.name %>" autocomplete="name"
+                        <input type="text" id="fullName" name="fullName" value="<%= User.fullName %>"
+                           autocomplete="name"
                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
                            required>
 
                      </div>
                      <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" value="<%= user.id.email %>" autocomplete="email"
+                        <input type="email" id="email" name="email" value="<%= User.email %>" autocomplete="email"
                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
                            disabled>
                      </div>
                      <div>
                         <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                        <input type="text" id="phone" name="phone" autocomplete="tel"
+                        <input type="text" id="phone" name="phone" autocomplete="tel" value="<%= User.phone %>"
                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
                      </div>
                      <div>
                         <label for="dob" class="block text-sm font-medium text-gray-700">Date of Birth</label>
-                        <input type="date" id="dob" name="dob" autocomplete="bday"
+                        <input type="date" id="dob" name="dob" autocomplete="bday" value="<%= User.dob %>"
                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
                      </div>
                   </div>
@@ -195,7 +217,7 @@
                      <div class="grid grid-cols-1 gap-6">
                         <div>
                            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                           <input type="text" id="address" name="address"
+                           <input type="text" id="address" name="address" value="<%= User.address %>"
                               class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
                         </div>
                      </div>
@@ -235,20 +257,30 @@
 
                <h2 class="text-2xl font-bold text-gray-800">Active Donations</h2>
 
-
-
-               <!-- Card Grid Container -->
                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                  <% donation.forEach(don => { %>
+                  <% const date = new Date(don.pickupDate);
 
-                  <!-- CARD 1 -->
+                     const options = {
+                       weekday: 'long',   
+                       year: 'numeric',
+                       month: 'long',    
+                       day: 'numeric',   
+                       hour: 'numeric',   
+                       minute: 'numeric', 
+                       hour12: true,     
+                     };
+                     
+                     const formatted = date.toLocaleString('en-US', options);
+                    %>
                   <div class="bg-white rounded-lg shadow-md border p-4 space-y-4 text-gray-800">
-                     <div class="text-lg font-semibold">1 Pizza</div>
+                     <div class="text-lg font-semibold"><%= don.quantity %> <%= don.foodName %></div>
 
                      <div class="flex items-start space-x-2">
                         <span class="material-icons text-blue-500">schedule</span>
                         <div>
                            <p class="text-sm font-medium text-blue-600">Pickup Date & Time</p>
-                           <p class="text-sm">Tuesday, April 22, 10:22 AM</p>
+                           <p class="text-sm"><%= formatted %></p>
                         </div>
                      </div>
 
@@ -257,7 +289,7 @@
                         <div>
                            <p class="text-sm font-medium text-green-600">Pickup Location</p>
                            <p class="text-sm">
-                              1377 Oxford Court<br> Memphis, MS - 38118
+                              <%= don.address %>
                            </p>
                         </div>
                      </div>
@@ -266,486 +298,109 @@
                         <span class="material-icons text-indigo-500">notes</span>
                         <div>
                            <p class="text-sm font-medium text-indigo-600">Specific Instructions</p>
-                           <p class="text-sm">Please handle with care.</p>
+                           <p class="text-sm"><%= don.specialInstructions %></p>
                         </div>
                      </div>
 
                      <div class="pt-2">
+                        <% if (don.deliverystatus == "not delivered") { %>
                         <div
                            class="flex items-center space-x-2 text-orange-600 bg-orange-100 text-sm rounded-md px-3 py-2">
                            <span class="material-icons text-orange-600 text-base">hourglass_empty</span>
                            <span>Waiting for charities to accept</span>
                         </div>
+
+                        <% } %>
+
                      </div>
                   </div>
+
+                  <% }) %>
+
 
 
                </div>
 
             </div>
-         </div>
+            <div id="Rewards" class="hidden">
+               <div class="overflow-x-auto rounded">
+                  <table class="min-w-full divide-y divide-gray-200 text-sm text-left rounded">
+                     <thead class="bg-datelink text-white">
+                        <tr>
+                           <th class="px-4 py-2">Full Name</th>
+                           <th class="px-4 py-2">Email</th>
+                           <th class="px-4 py-2">Phone</th>
+                           <th class="px-4 py-2">Address</th>
+                           <th class="px-4 py-2">Food Name</th>
+                           <th class="px-4 py-2">Quantity</th>
+                           <th class="px-4 py-2">Delivery Status</th>
+                           <th class="px-4 py-2">Expiry/Date</th>
+                           <th class="px-4 py-2">Actions</th>
+                        </tr>
+                     </thead>
+                     <tbody class="bg-white divide-y divide-gray-100">
+                        <% donation.forEach(donation => { %>
+                        <tr>
+                           <td class="px-4 py-2"><%= donation.donorName %></td>
+                           <td class="px-4 py-2"><%= donation.email %></td>
+                           <td class="px-4 py-2"><%= donation.phone %></td>
+                           <td class="px-4 py-2"><%= donation.address %></td>
+                           <td class="px-4 py-2"><%= donation.foodName %> (<%= donation.foodType %>)</td>
+                           <td class="px-4 py-2"><%= donation.quantity %> Kg</td>
+                           <td class="px-4 py-2"><%= donation. deliverystatus %></td>
 
-         <div id="Rewards" class="hidden">
-            <div class="overflow-x-auto rounded">
-               <table class="min-w-full divide-y divide-gray-200 text-sm text-left rounded">
-                  <thead class="bg-datelink text-white">
-                     <tr>
-                        <th class="px-4 py-2">Full Name</th>
-                        <th class="px-4 py-2">Email</th>
-                        <th class="px-4 py-2">Phone</th>
-                        <th class="px-4 py-2">Address</th>
-                        <th class="px-4 py-2">Food Name</th>
-                        <th class="px-4 py-2">Quantity</th>
-                        <th class="px-4 py-2">Delivery Status</th>
-                        <th class="px-4 py-2">Expiry/Date</th>
-                        <th class="px-4 py-2">Actions</th>
-                     </tr>
-                  </thead>
-                  <tbody class="bg-white divide-y divide-gray-100">
-                     <% donation.forEach(donation => { %>
-                     <tr>
-                        <td class="px-4 py-2"><%= donation.donorName %></td>
-                        <td class="px-4 py-2"><%= donation.email %></td>
-                        <td class="px-4 py-2"><%= donation.phone %></td>
-                        <td class="px-4 py-2"><%= donation.address %></td>
-                        <td class="px-4 py-2"><%= donation.foodName %> (<%= donation.foodType %>)</td>
-                        <td class="px-4 py-2"><%= donation.quantity %> Kg</td>
-                        <td class="px-4 py-2"><%= donation. deliverystatus %></td>
-   
-                        <td class="px-4 py-2"><%= donation.createdAt.toLocaleDateString() %></td>
-                        <td class="px-4 py-2 flex gap-2">
-                        
-                           <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                              data-id="<%= donation._id %>">
-                              Delete
-                           </button>
-   
-                           <button class="view-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                              data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
-                              data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
-                              data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
-                              data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
-                              data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>"
-                              data-date="<%= donation.createdAt.toLocaleDateString() %>">
-                              View
-                           </button>
-   
-                        </td>
-                     </tr>
-                     <% }); %>
-                  </tbody>
-   
-               </table>
+                           <td class="px-4 py-2"><%= donation.createdAt.toLocaleDateString() %></td>
+                           <td class="px-4 py-2 flex gap-2">
 
-         </div>
+                              <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                                 data-id="<%= donation._id %>">
+                                 Delete
+                              </button>
+
+                              <button class="view-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                                 data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
+                                 data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
+                                 data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
+                                 data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
+                                 data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>"
+                                 data-date="<%= donation.createdAt.toLocaleDateString() %>">
+                                 View
+                              </button>
+
+                           </td>
+                        </tr>
+                        <% }); %>
+                     </tbody>
+
+                  </table>
+
+               </div>
       </main>
    </div>
 
 
 
-   <!-- <aside class=" bg-bordercolor  flex flex-col  gap-5 p-5 shadow-lg h-screen  ">
-         <div class="bg-emerald-600  text-white cursor-pointer rounded-lg text-xl " id="profileToggle">
-            <div class="flex gap-3 p-2 ">
-               <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px">
-                  <path
-                     d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q53 0 100-15.5t86-44.5q-39-29-86-44.5T480-280q-53 0-100 15.5T294-220q39 29 86 44.5T480-160Zm0-360q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm0-60Zm0 360Z" />
-               </svg>
-               <h1 class="font-bold" id="profileName"><%= user.id.name %></h1>
-            </div>
-         </div>
-         <div class=" hover:bg-textcolor cursor-pointer rounded-lg text-xl " id="dashboardToggle">
-            <div class="flex gap-3 p-2 ">
-               <svg xmlns="http://www.w3.org/2000/svg" height="30px" width="30px" viewBox="0 -960 960 960">
-                  <path
-                     d="M520-600v-240h320v240H520ZM120-440v-400h320v400H120Zm400 320v-400h320v400H520Zm-400 0v-240h320v240H120Zm80-400h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
-               </svg>
-               <h1 class="font-bold">Dashboard</h1>
-            </div>
-         </div>
-         <div class="rounded-lg hover:bg-textcolor cursor-pointer text-xl" id="alldonationsToggle">
-            <div class="flex gap-3 p-2 ">
-               <svg xmlns="http://www.w3.org/2000/svg" height="30px" width="30px" viewBox="0 -960 960 960">
-                  <path
-                     d="M640-440 474-602q-31-30-52.5-66.5T400-748q0-55 38.5-93.5T532-880q32 0 60 13.5t48 36.5q20-23 48-36.5t60-13.5q55 0 93.5 38.5T880-748q0 43-21 79.5T807-602L640-440Zm0-112 109-107q19-19 35-40.5t16-48.5q0-22-15-37t-37-15q-14 0-26.5 5.5T700-778l-60 72-60-72q-9-11-21.5-16.5T532-800q-22 0-37 15t-15 37q0 27 16 48.5t35 40.5l109 107ZM280-220l278 76 238-74q-5-9-14.5-15.5T760-240H558q-27 0-43-2t-33-8l-93-31 22-78 81 27q17 5 40 8t68 4q0-11-6.5-21T578-354l-234-86h-64v220ZM40-80v-440h304q7 0 14 1.5t13 3.5l235 87q33 12 53.5 42t20.5 66h80q50 0 85 33t35 87v40L560-60l-280-78v58H40Zm80-80h80v-280h-80v280Zm520-546Z" />
-               </svg>
-               <h1 class="font-bold">Track Donations</h1>
-            </div>
-         </div>
-
-         <div class=" rounded-lg hover:bg-textcolor cursor-pointer text-xl" id="rewardsToggle">
-            <div class="flex gap-3 p-2 ">
-               <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px">
-                  <path
-                     d="M480-160q75 0 127.5-52.5T660-340q0-75-52.5-127.5T480-520q-75 0-127.5 52.5T300-340q0 75 52.5 127.5T480-160ZM363-572q20-11 42.5-17.5T451-598L350-800H250l113 228Zm234 0 114-228H610l-85 170 19 38q14 4 27 8.5t26 11.5ZM256-208q-17-29-26.5-62.5T220-340q0-36 9.5-69.5T256-472q-42 14-69 49.5T160-340q0 47 27 82.5t69 49.5Zm448 0q42-14 69-49.5t27-82.5q0-47-27-82.5T704-472q17 29 26.5 62.5T740-340q0 36-9.5 69.5T704-208ZM480-80q-40 0-76.5-11.5T336-123q-9 2-18 2.5t-19 .5q-91 0-155-64T80-339q0-87 58-149t143-69L120-880h280l80 160 80-160h280L680-559q85 8 142.5 70T880-340q0 92-64 156t-156 64q-9 0-18.5-.5T623-123q-31 20-67 31.5T480-80Zm0-260ZM363-572 250-800l113 228Zm234 0 114-228-114 228ZM406-230l28-91-74-53h91l29-96 29 96h91l-74 53 28 91-74-56-74 56Z" />
-               </svg>
-               <h1 class="font-bold">Rewards</h1>
-            </div>
-         </div>
-
-      </aside> -->
-   <divclass=" hidden h-screen flex-col">
-      <div class=" flex max-h-14 m-2 rounded-md w-[100%] justify-between md:flex-row flex-col">
-         <!-- <div><input
-                  class=" hidden bg-cardbg w- rounded-md m-2 px-2 py-1 outline-none focus:outline-none focus:ring-2 focus:ring-white  text-xl  "
-                  type="search" name="" id="">
-               <select
-                  class="hidden bg-cardbg w- rounded-md m-2 px-2 py-1 outline-none focus:outline-none focus:ring-2 focus:ring-white  text-xl "
-                  name="sort" id="">
-                  <option value="">Sort</option>
-               </select>
-            </div> -->
-         <p class=" rounded m-2 px-2 py-1 text-xl  bg-cardbg flex gap-2 text-end">Total Donations :
-            <%= donation.length %></p>
-      </div>
-      <div class="w-[100%] h-screen m-2 p-2">
-         <div class="overflow-x-auto rounded">
-            <table class="min-w-full divide-y divide-gray-200 text-sm text-left rounded">
-               <thead class="bg-datelink text-white">
-                  <tr>
-                     <th class="px-4 py-2">Full Name</th>
-                     <th class="px-4 py-2">Email</th>
-                     <th class="px-4 py-2">Phone</th>
-                     <th class="px-4 py-2">Address</th>
-                     <th class="px-4 py-2">Food Name</th>
-                     <th class="px-4 py-2">Quantity</th>
-                     <th class="px-4 py-2">Delivery Status</th>
-                     <th class="px-4 py-2">Expiry/Date</th>
-                     <th class="px-4 py-2">Actions</th>
-                  </tr>
-               </thead>
-               <tbody class="bg-white divide-y divide-gray-100">
-                  <% donation.forEach(donation => { %>
-                  <tr>
-                     <td class="px-4 py-2"><%= donation.donorName %></td>
-                     <td class="px-4 py-2"><%= donation.email %></td>
-                     <td class="px-4 py-2"><%= donation.phone %></td>
-                     <td class="px-4 py-2"><%= donation.address %></td>
-                     <td class="px-4 py-2"><%= donation.foodName %> (<%= donation.foodType %>)</td>
-                     <td class="px-4 py-2"><%= donation.quantity %> Kg</td>
-                     <td class="px-4 py-2"><%= donation. deliverystatus %></td>
-
-                     <td class="px-4 py-2"><%= donation.createdAt.toLocaleDateString() %></td>
-                     <td class="px-4 py-2 flex gap-2">
-                        <button class="update-btn bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                           data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
-                           data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
-                           data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
-                           data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
-                           data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>">
-                           Update
-                        </button>
 
 
-                        <button class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                           data-id="<%= donation._id %>">
-                           Delete
-                        </button>
+   </script>
+   <!-- Sidebar JS -->
+   <script>
+      document.addEventListener('DOMContentLoaded', () => {
+         const toggleBtn = document.getElementById('sidebarToggle');
+         const sidebar = document.getElementById('dashboardSidebar');
 
-                        <button class="view-btn bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                           data-id="<%= donation._id %>" data-name="<%= donation.donorName %>"
-                           data-email="<%= donation.email %>" data-phone="<%= donation.phone %>"
-                           data-address="<%= donation.address %>" data-food="<%= donation.foodName %>"
-                           data-type="<%= donation.foodType %>" data-quantity="<%= donation.quantity %>"
-                           data-delivery="<%= donation.deliverystatus %>" data-status="<%= donation.status %>"
-                           data-date="<%= donation.createdAt.toLocaleDateString() %>">
-                           View
-                        </button>
+         toggleBtn?.addEventListener('click', (e) => {
 
-                     </td>
-                  </tr>
-                  <% }); %>
-               </tbody>
-
-            </table>
-            <!-- Modal  for view -->
-            <div id="viewModal"
-               class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50">
-               <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative">
-                  <button id="closeModal"
-                     class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl font-bold">&times;</button>
-                  <h2 class="text-xl font-bold mb-4">Donation Details</h2>
-                  <table class="w-full table-auto border-collapse">
-                     <tbody>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Name:</td>
-                           <td id="modalName" class="py-2"></td>
-                        </tr>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Email:</td>
-                           <td id="modalEmail" class="py-2"></td>
-                        </tr>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Phone:</td>
-                           <td id="modalPhone" class="py-2"></td>
-                        </tr>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Address:</td>
-                           <td id="modalAddress" class="py-2"></td>
-                        </tr>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Food:</td>
-                           <td id="modalFood" class="py-2"></td>
-                        </tr>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Type:</td>
-                           <td id="modalType" class="py-2"></td>
-                        </tr>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Quantity:</td>
-                           <td id="modalQuantity" class="py-2"></td>
-                        </tr>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Delivery Status:</td>
-                           <td id="modalDelivery" class="py-2"></td>
-                        </tr>
-                        <tr class="border-b">
-                           <td class="font-semibold py-2 pr-4">Status:</td>
-                           <td id="modalStatus" class="py-2"></td>
-                        </tr>
-                        <tr>
-                           <td class="font-semibold py-2 pr-4">Date:</td>
-                           <td id="modalDate" class="py-2"></td>
-                        </tr>
-                     </tbody>
-                  </table>
-
-               </div>
-            </div>
-            <!-- model for update -->
-            <div id="updateModal"
-               class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50">
-               <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-xl relative">
-                  <button id="closeUpdateModal"
-                     class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-xl font-bold">&times;</button>
-                  <h2 class="text-xl font-bold mb-4">Update Donation</h2>
-                  <form id="updateForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <input type="hidden" name="id" id="updateId" />
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Full Name</label>
-                        <input type="text" id="updateName" name="donorName"
-                           class="w-full border rounded px-3 py-2 mt-1">
-                     </div>
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Email</label>
-                        <input type="email" id="updateEmail" name="email" class="w-full border rounded px-3 py-2 mt-1">
-                     </div>
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Phone</label>
-                        <input type="text" id="updatePhone" name="phone" class="w-full border rounded px-3 py-2 mt-1">
-                     </div>
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Address</label>
-                        <input type="text" id="updateAddress" name="address"
-                           class="w-full border rounded px-3 py-2 mt-1">
-                     </div>
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Food Name</label>
-                        <input type="text" id="updateFood" name="foodName" class="w-full border rounded px-3 py-2 mt-1">
-                     </div>
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Food Type</label>
-                        <select id="updateType" name="foodType" class="w-full border rounded px-3 py-2 mt-1">
-                           <option value="veg">Veg</option>
-                           <option value="non-veg">Non-Veg</option>
-                        </select>
-                     </div>
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Quantity (Kg)</label>
-                        <input type="number" id="updateQuantity" name="quantity"
-                           class="w-full border rounded px-3 py-2 mt-1">
-                     </div>
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Package Status</label>
-                        <select id="updateStatus" name="status" class="w-full border rounded px-3 py-2 mt-1">
-                           <option value="packaged">Packaged</option>
-                           <option value="unpackaged">Unpackaged</option>
-                        </select>
-                     </div>
-
-                     <div class="col-span-full sm:col-span-1">
-                        <label class="block text-gray-700">Delivery Status</label>
-                        <select id="updateDelivery" name="deliverystatus" class="w-full border rounded px-3 py-2 mt-1">
-                           <option value="delivered">delivered</option>
-                           <!-- <option value="in-progress">In Progress</option> -->
-                           <option value="not delivered">not delivered</option>
-                        </select>
-                     </div>
-
-                     <div class="col-span-full mt-4">
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                           Save Changes
-                        </button>
-                     </div>
-                  </form>
-
-               </div>
-            </div>
+            sidebar.classList.toggle('-translate-x-full');
 
 
-         </div>
-
-      </div>
-      </div>
-
-      <!-- <div class="hidden mx-auto h-screen">
-         <div class="  p-6  min-h-screen items-center justify-center ">
-            <div class="w-full  bg-white p-6 rounded-xl shadow-md space-y-8">
-
-           
-               <h2 class="text-2xl font-bold text-gray-800">Update Your Profile</h2>
-
-           
-               <form method="POST" action="/donate/update-profile" class="space-y-6 text-lg">
-
-        
-                  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                     <div>
-                        <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <input type="text" id="fullName" name="fullName" value="<%= user.id.name %>"
-                           class="mt-1 bg-cardbg p-1  px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                     </div>
-                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" value="<%= user.id.email  %>"
-                           class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm" disabled>
-                     </div>
-                     <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                        <input type="text" id="phone" name="phone" value="<%= user.phone %>"
-                           class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                     </div>
-                     <div>
-                        <label for="dob" class="block text-sm font-medium text-gray-700">Date of Birth</label>
-                        <input type="date" id="dob" name="dob" value="<%= user.dob %>"
-                           class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                     </div>
-                  </div>
-
-           
-                  <div class="space-y-4 border-t pt-6">
-                     <h3 class="text-lg font-medium text-gray-800">Address</h3>
-                     <div class="grid p-1 px-3 grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                           <label for="houseNo" class="block text-sm font-medium text-gray-700">House No.</label>
-                           <input type="text" id="houseNo" name="houseNo" value="<%= User.address.houseNo %>"
-                              class="mt-1 p-1 bg-cardbg px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                        </div>
-                        <div>
-                           <label for="street" class="block text-sm font-medium text-gray-700">Street</label>
-                           <input type="text" id="street" name="street" value="<%= User.address.street %>"
-                              class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                        </div>
-                        <div>
-                           <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                           <input type="text" id="city" name="city" value="<%= User.address.city %>"
-                              class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                        </div>
-                        <div>
-                           <label for="state" class="block text-sm font-medium text-gray-700">State</label>
-                           <input type="text" id="state" name="state" value="<%= User.address.state %>"
-                              class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                        </div>
-                        <div class="md:col-span-2">
-                           <label for="pincode" class="block text-sm font-medium text-gray-700">Pincode</label>
-                           <input type="text" id="pincode" name="pincode" value="<%= User.address.pincode %>"
-                              class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                        </div>
-                     </div>
-                  </div>
-
-  
-                  <div class="border-t pt-6 space-y-4">
-                     <h3 class="text-lg font-medium text-gray-800">Change Password</h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                           <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current
-                              Password</label>
-                           <input type="password" id="currentPassword" name="currentPassword"
-                              class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                        </div>
-                        <div>
-                           <label for="newPassword" class="block text-sm font-medium text-gray-700">New Password</label>
-                           <input type="password" id="newPassword" name="newPassword"
-                              class="mt-1 bg-cardbg p-1 px-3 block w-full rounded-md border-gray-300 shadow-sm">
-                        </div>
-                     </div>
-                  </div>
-
-        
-                  <div class="pt-4">
-                     <button type="submit"
-                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow">Update
-                        Profile</button>
-                  </div>
-               </form>
-            </div>
-         </div>
-      </div> -->
-
-
-
-
-      <script>
-
-
-         const viewButtons = document.querySelectorAll('.view-btn');
-         const modal = document.getElementById('viewModal');
-         const closeModal = document.getElementById('closeModal');
-
-         viewButtons.forEach(button => {
-            button.addEventListener('click', () => {
-               document.getElementById('modalName').textContent = button.dataset.name;
-               document.getElementById('modalEmail').textContent = button.dataset.email;
-               document.getElementById('modalPhone').textContent = button.dataset.phone;
-               document.getElementById('modalAddress').textContent = button.dataset.address;
-               document.getElementById('modalFood').textContent = button.dataset.food;
-               document.getElementById('modalType').textContent = button.dataset.type;
-               document.getElementById('modalQuantity').textContent = button.dataset.quantity + ' Kg';
-               document.getElementById('modalDelivery').textContent = button.dataset.delivery;
-               document.getElementById('modalStatus').textContent = button.dataset.status;
-               document.getElementById('modalDate').textContent = button.dataset.date;
-
-               modal.classList.remove('hidden');
-            });
          });
 
-         closeModal.addEventListener('click', () => {
-            modal.classList.add('hidden');
-         });
-
-         // Optional: Close modal when clicking outside
-         modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.classList.add('hidden');
-         });
-
-
-      </script>
-      <!-- Sidebar JS -->
-      <script>
-         document.addEventListener('DOMContentLoaded', () => {
-            const toggleBtn = document.getElementById('sidebarToggle');
-            const sidebar = document.getElementById('dashboardSidebar');
-
-            toggleBtn?.addEventListener('click', (e) => {
-
-               sidebar.classList.toggle('-translate-x-full');
-
-
-            });
-           
-         });
-      </script>
-      <script src="/javascript/datajs.js"></script>
-      <script src="/javascript/AjaxForDelete.js"></script>
-      <script src="/javascript/SwapComponents.js"></script>
+      });
+   </script>
+   <script src="/javascript/datajs.js"></script>
+   <script src="/javascript/AjaxForDelete.js"></script>
+   <script src="/javascript/SwapComponents.js"></script>
 
 
 

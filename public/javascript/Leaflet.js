@@ -5,7 +5,7 @@ let marker;
 //         async function (position) {
 //           const lat = position.coords.latitude;
 //           const lon = position.coords.longitude;
-const map = L.map("map").setView([23.01183, 72.3446], 13);
+const map = L.map("map").setView([23.0215374,72.5800568], 13);
 // setTimeout(() => {
 //       map.invalidateSize();
 

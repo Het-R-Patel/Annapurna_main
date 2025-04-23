@@ -5,6 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const authMiddleware = require("./middlewares/authMiddleware");
+const checkUser = require("./middlewares/checkUser");
 
 require("dotenv").config();
 
@@ -31,9 +32,33 @@ app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 app.use(express.static(path.join(__dirname, "public")));
 
+const session = require("express-session");
+const flash = require("express-flash");
+
+app.use(session({
+  secret: "mewomewo", 
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(flash());
 
 app.use("/", authRoutes);
 app.use("/donate",authMiddleware,postsRoutes)
+app.get("/", checkUser, (req, res) => {
+  res.render("home", {
+    showSignupModal: req.flash("showSignupModal")[0] || false,
+    signupErrors: req.flash("signupErrors")[0] || {},
+    formData: req.flash("formData")[0] || {},
+  });
+});
+app.get("/aboutus", checkUser, (req,res)=>{
+  res.render("about")
+});
+
+app.get("/contactus", checkUser, (req,res)=>{
+  res.render("contact")
+});
 
 
 app.listen(PORT, () => {
