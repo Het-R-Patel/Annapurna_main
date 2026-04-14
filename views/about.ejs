@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="/styles/style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <%- include('partials/navbar.ejs') %>
+   
+    <section class="min-h-screen bg-backgroundcolor text-textcolor px-6 py-12 md:px-20">
+        <div class="max-w-5xl mx-auto">
+          <h1 class="text-4xl md:text-5xl font-bold text-center mb-6 ">About Annapurna</h1>
+          <p class="text-lg md:text-xl text-center mb-10 ">
+            Annapurna is a community-driven platform that connects food donors with those in need. Our goal is to eliminate food waste and hunger—one meal at a time.
+          </p>
+      
+          <div class="grid gap-10 md:grid-cols-2">
+            <!-- Mission Card -->
+            <div class="bg-white shadow-lg rounded-2xl p-6">
+              <h2 class="text-2xl font-semibold text-[#E63946] mb-3">Our Mission</h2>
+              <p class="text-[#50727B]">
+                To ensure every leftover meal finds a plate instead of a bin. We strive to serve both humanity and nature by redistributing food efficiently.
+              </p>
+            </div>
+      
+            <!-- Vision Card -->
+            <div class="bg-white shadow-lg rounded-2xl p-6">
+              <h2 class="text-2xl font-semibold text-[#E63946] mb-3">Our Vision</h2>
+              <p class="text-[#50727B]">
+                We envision a hunger-free world where surplus food becomes a blessing, not waste. We aim to empower communities with kindness and action.
+              </p>
+            </div>
+      
+            <!-- What We Do Card -->
+            <div class="bg-white shadow-lg rounded-2xl p-6">
+              <h2 class="text-2xl font-semibold text-[#E63946] mb-3">What We Do</h2>
+              <p class="text-[#50727B]">
+                We collect leftover food from homes, restaurants, and events. After a quick quality check, we deliver it to the needy—be it people or animals.
+              </p>
+            </div>
+      
+            <!-- Join Us Card -->
+            <div class="bg-white shadow-lg rounded-2xl p-6">
+              <h2 class="text-2xl font-semibold text-[#E63946] mb-3">Join the Cause</h2>
+              <p class="text-[#50727B]">
+                Become a volunteer, donor, or supporter. Annapurna is not just a platform—it's a movement of compassion. Let’s create impact together.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+</body>
+</html>

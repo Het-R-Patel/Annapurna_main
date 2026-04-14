@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annapurna</title>
+    <link rel="stylesheet" href="/styles/style.css" type="text/css" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script defer src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script defer src="/javascript/Leaflet.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-backgroundcolor">
+    <%- include('partials/navbar.ejs') %>
+    <div class="flex justify-center  gap-3 xl:flex-row  flex-col h-full  min-h-screen p-4">
+        <div class="bg-bordercolor p-6 rounded-lg shadow-lg w-full max-w-4xl">
+            <h2 class="text-2xl font-semibold text-center ">Donate Leftover Food</h2>
+            <form id="donationForm" action="/donate/donateformsubmit" method="POST" class="mt-4 space-y-4 grid-cols-2 ">
+                <p class="border-b-2 border-textcolor p-2">Personal Details</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                    <div>
+                        <label class="block text-gray-700 font-medium">Full Name</label>
+                        <input type="text" name="fullName" value="<%= user.id.name %>"
+                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                            required>
+                        <span id="error-fullName" class="error text-xs text-red-600 "></span>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium">Email</label>
+                        <input type="email" value="<%= user.id.email %>" name="email"
+                            class=" w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                            readonly>
+                        <span id="error-email" class="error text-xs text-red-600 "></span>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium">Phone Number</label>
+                        <input type="tel" name="phone"
+                            class="w-full px-4 bg-cardbg py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                            required>
+                            <span id="error-phone" class="error text-xs text-red-600 "></span>
+                    </div>
+                </div>
+
+                <p class="border-b-2 border-textcolor p-2 ">Address Details</p>
+                <div class="grid grid-cols-1 ">
+                    <div>
+                        <label class="block text-gray-700 font-medium">Address</label>
+                        <input type="text" id="mapAdd" value="<%= address %>" name="address"
+                            class="w-full bg-cardbg  px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                            required>
+                            <span id="error-address" class="error text-xs text-red-600 "></span>
+                    </div>
+
+
+                </div>
+                <div>
+
+
+                </div>
+                <p class="border-b-2 border-textcolor p-2">Food Details</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium">Food Name</label>
+                        <input type="text" name="foodName"
+                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                            required>
+                            <span id="error-foodName" class="error text-xs text-red-600 "></span>
+
+                            
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium">Quantity (Servings/Kg)</label>
+                        <input type="number" name="quantity"
+                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                            required>
+                            <span id="error-quantity" class="error text-xs text-red-600 "></span>
+                            
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium ">Prepared Date</label>
+                        <input type="date" name="preparedDate"
+                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                            required>
+                            <span id="error-preparedDate" class="error text-xs text-red-600 "></span>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium">Food Type</label>
+                        <select name="foodType"
+                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                            <option value="Vegetarian">Vegetarian</option>
+                            <option value="Non-Vegetarian">Non-Vegetarian</option>
+                        </select>
+                        <span id="error-foodType" class="error text-xs text-red-600 "></span>
+
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium">Packaging Status</label>
+                        <select name="packagingStatus"
+                            class="bg-cardbg w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                            <option value="Packaged">Packaged</option>
+                            <option value="Not Packed">Not packed</option>
+                        </select>
+                        <span id="error-packagingStatus" class="error text-xs text-red-600 "></span>
+
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium ">Additional Notes</label>
+                        <textarea name="additionalNotes" rows="3"
+                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"></textarea>
+                    </div>
+                </div>
+                <!-- Pickup Information -->
+                <p class="border-b-2 border-textcolor p-2">Pickup Details</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-gray-700 font-medium">Preferred Pickup Time</label>
+                        <input type="time" name="preferredPickupTime"
+                            class="bg-cardbg w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                        <span id="error-preferredPickupTime" class="error text-xs text-red-600 "></span>
+                        
+                        </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium">Pickup Date</label>
+                        <input type="date" name="pickupDate"
+                            class="w-full bg-cardbg px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"
+                            required>
+                            <span id="error-pickupDate" class="error text-xs text-red-600 "></span>
+
+                    
+                        </div>
+
+
+                    <div>
+                        <label class="block text-gray-700 font-medium">Landmark (Optional)</label>
+                        <input type="text" name="landmark"
+                            class="bg-cardbg w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]">
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-700 font-medium">Special Instructions</label>
+                        <textarea name="specialInstructions" rows="3"
+                            class="bg-cardbg w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E63946]"></textarea>
+                    </div>
+                </div>
+                <!-- Agreement & Submit -->
+                <div class="flex items-center">
+                    <input type="checkbox" name="agree_terms" class="mr-2 bg-cardbg" required>
+                    <label class="text-gray-700 font-medium ">I agree to the terms and conditions</label>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-buttonbg text-white py-2 rounded-lg hover:bg-[#c72d3d] transition">Submit
+                    Donation</button>
+            </form>
+        </div>
+
+        <div class="bg-bordercolor p-6  rounded-lg shadow-lg  w-full max-w-4xl">
+
+            <h1 class=" text-center font-semibold text-2xl">Select Location</h1>
+
+
+            <div id="map" class="xl:h-[95%] md:w-full h-96  p-2 mt-4   rounded "></div>
+
+
+        </div>
+
+
+    </div>
+    <footer class="bg-[#264653] text-white py-8 mt-6">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- About Section -->
+            <div>
+                <h2 class="text-xl font-semibold">Annapurna</h2>
+                <p class="mt-2 text-gray-300">Helping reduce food waste by connecting donors with those in need.</p>
+            </div>
+            <!-- Quick Links -->
+            <div>
+                <h2 class="text-xl font-semibold">Quick Links</h2>
+                <ul class="mt-2 space-y-2">
+                    <li><a href="#" class="hover:text-[#F4A261]">Home</a></li>
+                    <li><a href="#" class="hover:text-[#F4A261]">About Us</a></li>
+                    <li><a href="#" class="hover:text-[#F4A261]">Donate</a></li>
+                    <li><a href="#" class="hover:text-[#F4A261]">Contact</a></li>
+                </ul>
+            </div>
+            <!-- Contact Info -->
+            <div>
+                <h2 class="text-xl font-semibold">Contact Us</h2>
+                <p class="mt-2 text-gray-300">Email: support@annapurna.com</p>
+                <p class="text-gray-300">Phone: +91 123 456 7890</p>
+                <!-- Social Icons -->
+                <div class="flex space-x-4 mt-3">
+                    <a href="#" class="hover:text-[#F4A261]"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-[#F4A261]"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-[#F4A261]"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-6 border-t border-gray-500 pt-4 text-gray-300">
+            &copy; 2025 Annapurna. All Rights Reserved.
+        </div>
+    </footer>
+
+
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const form = document.getElementById('donationForm');
+      
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+      
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData.entries());
+      
+            try {
+              const res = await fetch('/donate/donateformsubmit', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+              });
+      
+              const data = await res.json(); 
+              // Show validation errors
+              if (!data.success) {
+                for (const field in data.errors) {
+                  const errorEl = document.getElementById(`error-${field}`);
+                  if (errorEl) errorEl.textContent = data.errors[field];
+                }
+              } else {
+                window.location.href = "/dashboard";
+              }
+      
+            } catch (error) {
+              console.log('Error:', error);
+            }
+          });
+        });
+      </script>
+      
+      
+
+</body>
+
+</html>
