@@ -6,20 +6,22 @@ const { signupValidation } = require("../middlewares/validators");
 
 const checkUser = require("../middlewares/checkUser");
 
-const { getDashboard } = require("../controllers/posts");
+const { getDashboard, getVolunteerDashboard, getAdminDashboard, acceptDonation, completeDonation, rejectDonation } = require("../controllers/posts");
 
 router.post("/signup", signupValidation, authController.signup);
 router.post("/login", authController.login);
 router.get("/logout", authController.logout);
 
-// // Protected route
-// router.get("/", authMiddleware, (req, res) => {
-//   res.send("Welcome to the protected dashboard");
-// });
-
-
+// Protected routes
 router.get("/dashboard", authMiddleware, getDashboard);
 
+// Admin Route
+router.get("/admin-dashboard", authMiddleware, getAdminDashboard);
 
+// Volunteer Routes
+router.get("/volunteer-dashboard", authMiddleware, getVolunteerDashboard);
+router.post("/donation/:id/accept", authMiddleware, acceptDonation);
+router.post("/donation/:id/complete", authMiddleware, completeDonation);
+router.post("/donation/:id/reject", authMiddleware, rejectDonation);
 
 module.exports = router;

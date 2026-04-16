@@ -81,7 +81,7 @@ async function getDashboard(req, res) {
   try {
     const donations = await FoodDonation.find({
       email: req.user.id.email,
-    }).sort({ createdAt: -1 });
+    }).sort({ createdAt: -1 }).populate('volunteerId', 'fullName phone');
     console.log(donations)
 
     const userData = await User.find({
@@ -184,6 +184,113 @@ async function UpdateUserProfile(req, res) {
   }
 }
 
+async function getVolunteerDashboard(req, res) {
+  try {
+    const user = await User.findById(req.user.id.id);
+    if (!user || user.role !== 'Volunteer') {
+      return res.redirect('/');
+    }
+    
+    // Find all pending donations OR donations accepted by THIS volunteer
+    const queries = {
+      $or: [
+        { deliverystatus: 'Pending' },
+        { volunteerId: req.user.id.id }
+      ]
+    };
+    
+    // Sort by most recent
+    const donations = await FoodDonation.find(queries).sort({ createdAt: -1 }).populate('volunteerId', 'fullName phone');
+
+    res.render('volunteerDashboard', { user, donations });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+}
+
+async function acceptDonation(req, res) {
+  try {
+    const donation = await FoodDonation.findById(req.params.id);
+    if (!donation) return res.status(404).send('Not Found');
+    
+    if (donation.deliverystatus !== 'Pending') {
+      return res.status(400).send('Donation is already accepted by someone else');
+    }
+    
+    donation.deliverystatus = 'Accepted';
+    donation.volunteerId = req.user.id.id;
+    await donation.save();
+    
+    res.redirect('/volunteer-dashboard');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+}
+
+async function completeDonation(req, res) {
+  try {
+    const donation = await FoodDonation.findById(req.params.id);
+    if (!donation) return res.status(404).send('Not Found');
+    
+    if (donation.volunteerId.toString() !== req.user.id.id.toString()) {
+      return res.status(403).send('Unauthorized');
+    }
+    
+    donation.deliverystatus = 'Delivered';
+    await donation.save();
+    
+    res.redirect('/volunteer-dashboard');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+}
+
+async function rejectDonation(req, res) {
+  try {
+    const donation = await FoodDonation.findById(req.params.id);
+    if (!donation) return res.status(404).send('Not Found');
+    
+    if (donation.volunteerId && donation.volunteerId.toString() !== req.user.id.id.toString()) {
+      return res.status(403).send('Unauthorized');
+    }
+    
+    donation.deliverystatus = 'Pending';
+    donation.volunteerId = undefined;
+    await donation.save();
+    
+    res.redirect('/volunteer-dashboard');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+}
+
+async function getAdminDashboard(req, res) {
+  try {
+    const user = await User.findById(req.user.id.id);
+    if (!user || user.role !== 'Admin') {
+      return res.redirect('/');
+    }
+    
+    const donations = await FoodDonation.find().sort({ createdAt: -1 }).populate('volunteerId', 'fullName phone email role');
+    const customers = await User.find({ role: 'Customer' });
+    const volunteers = await User.find({ role: 'Volunteer' });
+    
+    res.render("adminDashboard", {
+      user,
+      donations,
+      customers,
+      volunteers
+    });
+  } catch (err) {
+    console.error("Error fetching admin dashboard data:", err);
+    res.status(500).send("Server Error");
+  }
+}
+
 module.exports = {
   addDonation,
   getDashboard,
@@ -191,4 +298,9 @@ module.exports = {
   DeleteOrderDetails,
   RenderDonationForm,
   UpdateUserProfile,
+  getVolunteerDashboard,
+  acceptDonation,
+  completeDonation,
+  rejectDonation,
+  getAdminDashboard,
 };

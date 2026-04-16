@@ -70,8 +70,12 @@ const foodDonationSchema = new mongoose.Schema({
   },
   deliverystatus: {
     type: String,
-    enum: ["delivered", "not delivered"],
-    default: "not delivered",
+    enum: ["Pending", "Accepted", "Picked Up", "Delivered"],
+    default: "Pending",
+  },
+  volunteerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
   latitude: {
     type: Number,

@@ -46,6 +46,9 @@ app.use(flash());
 app.use("/", authRoutes);
 app.use("/donate",authMiddleware,postsRoutes)
 app.get("/", checkUser, (req, res) => {
+  if (res.locals.user && res.locals.user.id && res.locals.user.id.role === 'Volunteer') {
+    return res.redirect('/volunteer-dashboard');
+  }
   res.render("home", {
     showSignupModal: req.flash("showSignupModal")[0] || false,
     signupErrors: req.flash("signupErrors")[0] || {},

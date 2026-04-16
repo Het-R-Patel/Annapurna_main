@@ -19,14 +19,13 @@ exports.signup = async (req, res) => {
     req.flash("showSignupModal", true); 
     return res.redirect("/");
   }
-  const { fullName, email, phone, password, confirmPassword, dob, address } =
+  const { fullName, email, phone, password, confirmPassword, dob, address, role } =
     req.body;
 
-  if ((fullName, email, phone, password, confirmPassword, dob, address))
-    if (password !== confirmPassword) return res.send("Passwords do not match");
+  if (password !== confirmPassword) return res.send("Passwords do not match");
 
   try {
-    const user = await User.create({ fullName, email, phone, password,dob, address });
+    const user = await User.create({ fullName, email, phone, password, dob, address, role: role || 'Customer' });
 
     res.redirect("/");
   } catch (err) {
@@ -46,10 +45,17 @@ exports.login = async (req, res) => {
     id: user._id,
     name: user.fullName,
     email: user.email,
+    role: user.role,
   });
   res.cookie("jwt", token, { httpOnly: true });
 
-  res.redirect("/");
+  if (user.role === "Volunteer") {
+    res.redirect("/volunteer-dashboard");
+  } else if (user.role === "Admin") {
+    res.redirect("/admin-dashboard");
+  } else {
+    res.redirect("/dashboard");
+  }
 };
 
 exports.logout = (req, res) => {
